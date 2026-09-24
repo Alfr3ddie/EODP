@@ -1,4 +1,8 @@
 from math import pi
+
+from numpy.ma.core import arccos
+from scipy.signal import firwin_2d
+
 from config.ismConfig import ismConfig
 import numpy as np
 import math
@@ -91,7 +95,22 @@ class mtf:
         :return fnAct: 1D normalised frequencies 2D ACT (f/(1/w))
         :return fnAlt: 1D normalised frequencies 2D ALT (f/(1/w))
         """
-        #TODO
+        fstepAlt = 1 / nlines / w
+        fstepAct = 1 / ncolumns / w
+
+        eps = 1e-6
+
+        fAlt = np.arange(-1 / (2 * w), 1 / (2 * w) - eps, fstepAlt)
+        fAct = np.arange(-1 / (2 * w), 1 / (2 * w) - eps, fstepAct)
+
+        [fnAltxx, fnActxx] = np.meshgrid(fAlt, fAct, indexing='ij')  # Please use ‘ij’ indexing or you will get the transpose
+        f2D = np.sqrt(fnAltxx * fnAltxx + fnActxx * fnActxx)
+
+        f_cutoff = D/(lambd*focal)
+        fn2D = f2D/(1/w)
+        fr2D = f2D/(1/f_cutoff)
+        fnAct = fAlt/(1/w)
+        fnAlt = fAct/(1/w)
         return fn2D, fr2D, fnAct, fnAlt
 
     def mtfDiffract(self,fr2D):
@@ -101,6 +120,7 @@ class mtf:
         :return: diffraction MTF
         """
         #TODO
+        Hdiff = (2 / np.pi) * ((arccos(fr2D) - fr2D) * (1 - fr2D ** 2) ** (1 / 2))
         return Hdiff
 
 
@@ -114,6 +134,10 @@ class mtf:
         :return: Defocus MTF
         """
         #TODO
+        x = np.pi*defocus*fr2D*(1-fr2D)
+        j = x/2 - (x**3)/16 + (x**5)/384 - (x**7)/18432
+        Hdefoc = (2 * j) / x
+
         return Hdefoc
 
     def mtfWfeAberrations(self, fr2D, lambd, kLF, wLF, kHF, wHF):
@@ -128,6 +152,7 @@ class mtf:
         :return: WFE Aberrations MTF
         """
         #TODO
+        Hwfe = np.exp(-fr2D * (1 - fr2D) * (kLF * (wLF / lambd) ** 2 + kHF * (wHF / lambd) ** 2))
         return Hwfe
 
     def mtfDetector(self,fn2D):
@@ -137,6 +162,7 @@ class mtf:
         :return: detector MTF
         """
         #TODO
+        Hdet = np.abs(np.sinc(fn2D))
         return Hdet
 
     def mtfSmearing(self, fnAlt, ncolumns, ksmear):
@@ -148,6 +174,7 @@ class mtf:
         :return: Smearing MTF
         """
         #TODO
+        Hsmear = np.sinc(ksmear*fnAlt)
         return Hsmear
 
     def mtfMotion(self, fn2D, kmotion):
@@ -158,6 +185,7 @@ class mtf:
         :return: detector MTF
         """
         #TODO
+        Hmotion = np.sinc(kmotion*fn2D)
         return Hmotion
 
     def plotMtf(self,Hdiff, Hdefoc, Hwfe, Hdet, Hsmear, Hmotion, Hsys, nlines, ncolumns, fnAct, fnAlt, directory, band):
@@ -178,6 +206,8 @@ class mtf:
         :param band: band
         :return: N/A
         """
-        #TODO
+        MTF_system = Hdiff * Hdefoc * Hwfe * Hdet * Hsmear * Hmotion
 
+        #TODO
+        return MTF_system
 

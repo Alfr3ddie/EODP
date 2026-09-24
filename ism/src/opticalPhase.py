@@ -92,7 +92,7 @@ class opticalPhase(initIsm):
         :param Tr: Optical transmittance [-]
         :return: TOA image in irradiances [mW/m2]
         """
-        toa = toa 
+        toa = Tr*toa*(np.pi/4)*(D/f)**2
         return toa
 
 
@@ -140,6 +140,5 @@ class opticalPhase(initIsm):
                 sgm_inter = cs(wv_isrf)
                 toa[ialt, iact] = sum(sgm_inter*isrf)
 
-            return toa
 
-
+        return toa

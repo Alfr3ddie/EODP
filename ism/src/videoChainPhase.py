@@ -55,6 +55,7 @@ class videoChainPhase(initIsm):
         :param gain_adc: Gain of the Analog-to-digital conversion [-]
         :return: output toa in [V]
         """
+        toa = toa * OCF * gain_adc
         #TODO
         return toa
 
@@ -67,6 +68,7 @@ class videoChainPhase(initIsm):
         :param max_voltage: maximum voltage
         :return: toa in digital counts
         """
+        toa_dn = np.round(toa/(max_voltage-min_voltage))*((2**bit_depth-1))
         #TODO
         return toa_dn
 

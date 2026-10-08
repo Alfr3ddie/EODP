@@ -131,14 +131,7 @@ class opticalPhase(initIsm):
         # 2 convert ISRF  wavelenghts in nanometers x1000
         wv_isrf = wv_isrf * 1000 #nm
 
-        # creating interpolant of the ISRF
-        #cs = interp1d(wv_isrf, isrf,fill_value=(0,0) , bounds_error= False)
 
-        #interp_isrf = cs(sgm_wv) # ID vector
-
-        #for ialt in range (sgm_toa.shape[0]):
-         #   for iact in range (sgm_toa.shape[1]):
-         #      toa[ialt, iact] = np.sum(sgm_toa[ialt, iact, :] * interp_isrf)
          #return toa
         for ialt in range (sgm_toa.shape[0]):
             for iact in range (sgm_toa.shape[1]):

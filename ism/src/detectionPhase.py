@@ -1,3 +1,6 @@
+
+
+
 from scipy.constants import speed_of_light
 
 from ism.src.initIsm import initIsm
@@ -127,7 +130,9 @@ class detectionPhase(initIsm):
         FWC = self.ismConfig.FWC
         toae = toa * QE
 
-        #toae = np.minimum(toae,FWC)
+        for ii in range(toa.shape[0]):
+            for jj in range(toa.shape[1]):
+                 toae[ii, jj] = np.min((toae[ii, jj], FWC))
         return toae
 
     def badDeadPixels(self, toa,bad_pix,dead_pix,bad_pix_red,dead_pix_red):
@@ -141,6 +146,7 @@ class detectionPhase(initIsm):
         :return: toa in e- including bad & dead pixels
         """
         #TODO
+        toa[:, 5] = toa[:, 5]* (1-bad_pix_red)
         return toa
 
     def prnu(self, toa, kprnu):
@@ -172,9 +178,8 @@ class detectionPhase(initIsm):
         """
         #TODO
         DSNU = np.abs(np.random.standard_normal(toa.shape[1]))*kdsnu
-        Sd = ds_A_coeff * ((T/Tref)**3)*np.exp(-ds_B_coeff *(1/T-Tref))
-        DS_act = Sd (1+DSNU)
+        Sd = ds_A_coeff * ((T/Tref)**3) * np.exp(-ds_B_coeff * (1/T- 1/Tref))
+        DS_act = Sd * (1+DSNU)
         toa = toa + DS_act
-        #for act in range(toa.shape[1]):
-        #    toa[:,act] = toa[:,act] + Ds[act]
+
         return toa

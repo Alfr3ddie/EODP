@@ -108,9 +108,9 @@ class mtf:
 
         f_cutoff = D/(lambd*focal)
         fn2D = f2D/(1/w)
-        fr2D = f2D/(1/f_cutoff)
-        fnAct = fAlt/(1/w)
-        fnAlt = fAct/(1/w)
+        fr2D = f2D/f_cutoff
+        fnAct = fAct/(1/w)
+        fnAlt = fAlt/(1/w)
         return fn2D, fr2D, fnAct, fnAlt
 
     def mtfDiffract(self,fr2D):
@@ -120,7 +120,8 @@ class mtf:
         :return: diffraction MTF
         """
         #TODO
-        Hdiff = (2 / np.pi) * ((arccos(fr2D) - fr2D) * (1 - fr2D ** 2) ** (1 / 2))
+        Hdiff = (2 / np.pi) * (np.arccos(fr2D) - fr2D * np.sqrt(1 - fr2D*fr2D))
+
         return Hdiff
 
 
@@ -135,8 +136,7 @@ class mtf:
         """
         #TODO
         x = np.pi*defocus*fr2D*(1-fr2D)
-        j = x/2 - (x**3)/16 + (x**5)/384 - (x**7)/18432
-        Hdefoc = (2 * j) / x
+        Hdefoc = (2 * j1(x)) / x
 
         return Hdefoc
 
@@ -174,7 +174,11 @@ class mtf:
         :return: Smearing MTF
         """
         #TODO
-        Hsmear = np.sinc(ksmear*fnAlt)
+        aux = np.sinc(ksmear*fnAlt)
+        Hsmear = np.zeros((len(fnAlt), ncolumns))
+        for ii in range(ncolumns):
+            Hsmear[:, ii] = aux
+
         return Hsmear
 
     def mtfMotion(self, fn2D, kmotion):

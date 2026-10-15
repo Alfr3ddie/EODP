@@ -63,12 +63,11 @@ class l1c(initL1c):
         :return: L1C radiances, L1C latitude and longitude in degrees
         '''
         #TODO
-        tck = bisplrep(lat, lon, toa)
         m = mgrs.MGRS()
         mgrs_tiles = set([])
         for ii in range(toa.shape[0]): #100
             for jj in range(toa.shape[1]): #150
-                auxi = m.toMGRS(lat[ii,jj],lon[ii,jj], self.l1cConfig.mgrs_tile_precision)
+                auxi = m.toMGRS(lat[ii,jj],lon[ii,jj], MGRSPrecision=self.l1cConfig.mgrs_tile_precision)
                 mgrs_tiles.add(auxi)
 
         mgrs_tiles = list(mgrs_tiles)
@@ -76,14 +75,50 @@ class l1c(initL1c):
         toa_l1c = np.zeros(len(mgrs_tiles))
         lat_l1c = np.zeros(len(mgrs_tiles))
         lon_l1c = np.zeros(len(mgrs_tiles))
+        print("LAT:")
+        print("Shape:", np.shape(lat))
+        print("NaN:", np.isnan(lat).sum())
+        print("Inf:", np.isinf(lat).sum())
 
-        tck = bisplrep(lat , lon , toa)
+        print("LON:")
+        print("Shape:", np.shape(lon))
+        print("NaN:", np.isnan(lon).sum())
+        print("Inf:", np.isinf(lon).sum())
+
+        print("TOA:")
+        print("Shape:", np.shape(toa))
+        print("NaN:", np.isnan(toa).sum())
+        print("Inf:", np.isinf(toa).sum())
+        lat_flat = np.asarray(lat, dtype=np.float64).ravel()
+        lon_flat = np.asarray(lon, dtype=np.float64).ravel()
+        toa_flat = np.asarray(toa, dtype=np.float64).ravel()
+
+        print("Unique LAT:", len(np.unique(lat_flat)))
+        print("Unique LON:", len(np.unique(lon_flat)))
+
+        coordinates = np.column_stack((lat_flat, lon_flat))
+        print("Unique coordinate pairs:", len(np.unique(coordinates, axis=0)))
+
+        print("LAT range:", lat_flat.min(), lat_flat.max())
+        print("LON range:", lon_flat.min(), lon_flat.max())
+        print("TOA range:", toa_flat.min(), toa_flat.max())
+
+        tck = bisplrep(lat_flat, lon_flat, toa_flat)
 
         for ii in range(len(mgrs_tiles)):
 
             (lat_l1c[ii], lon_l1c[ii]) = m.toLatLon(mgrs_tiles[ii])
             toa_l1c[ii] = bisplev(lat_l1c[ii], lon_l1c[ii], tck)
         luss = 1
+        print("L1C OUTPUT VALIDATION")
+        print("Shape:", toa_l1c.shape)
+        print("NaN:", np.isnan(toa_l1c).sum())
+        print("Inf:", np.isinf(toa_l1c).sum())
+        print("Valid pixels:", np.isfinite(toa_l1c).sum())
+
+        if np.isfinite(toa_l1c).any():
+            print("Min:", np.nanmin(toa_l1c))
+            print("Max:", np.nanmax(toa_l1c))
         return lat_l1c, lon_l1c, toa_l1c
 
     def checkSize(self, lat,toa):

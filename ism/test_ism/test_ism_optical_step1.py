@@ -8,7 +8,7 @@ from netCDF4 import Dataset
 
 MY_OUTPUT = Path(r"C:\Users\pleon\EODP_files\SHARED\EODP_TER_2021\EODP-TS-ISM\myoutput")
 REFERENCE_OUTPUT = Path(r"C:\Users\pleon\EODP_files\SHARED\EODP_TER_2021\EODP-TS-ISM\output")
-REPORT_OUTPUT = Path(r"C:\Users\pleon\EODP_files\SHARED\EODP_TER_2021\EODP-TS-ISM\test_output")
+REPORT_OUTPUT = Path(r"C:\Users\pleon\EODP_files\SHARED\EODP_TER_2021\EODP-TS-ISM\test_output_ISM_1")
 
 
 BANDS = ["VNIR-0", "VNIR-1", "VNIR-2", "VNIR-3"]

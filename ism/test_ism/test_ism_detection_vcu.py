@@ -26,7 +26,7 @@ BANDS = ["VNIR-0", "VNIR-1", "VNIR-2", "VNIR-3"]
 ABS_TOL_ELECTRONS = 0.1  # electrons; accommodate float32 NetCDF storage
 ABS_TOL_DN = 0.0        # exact equality for digital counts, when possible
 REL_TOL_PERCENT = 0.01
-MIN_PASS_PERCENT = 95.45
+MIN_PASS_PERCENT = 99
 
 
 def read_toa(folder, stem, band, required=True):

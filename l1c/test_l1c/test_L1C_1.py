@@ -8,8 +8,8 @@ DATA_ROOT = Path(r"C:\Users\pleon\EODP_files\SHARED\EODP_TER_2021\EODP-TS-L1C")
 MY_OUTPUT = DATA_ROOT / "Myoutputs"
 REFERENCE = DATA_ROOT / "output"
 BANDS = ("VNIR-0", "VNIR-1", "VNIR-2", "VNIR-3")
-TOL_PERCENT = 0.01
-MIN_PASS_FRACTION = 0.9545
+TOL_PERCENT = 0.001
+MIN_PASS_FRACTION = 0.99
 
 
 def load_points(file_path):

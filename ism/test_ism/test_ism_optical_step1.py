@@ -13,8 +13,8 @@ REPORT_OUTPUT = Path(r"C:\Users\pleon\EODP_files\SHARED\EODP_TER_2021\EODP-TS-IS
 
 BANDS = ["VNIR-0", "VNIR-1", "VNIR-2", "VNIR-3"]
 STAGES = {"ISRF": "ism_toa_isrf_", "Optical": "ism_toa_optical_"}
-REL_TOL_PERCENT = 0.01       # 0.01 percent
-MIN_PASS_FRACTION = 0.9545  # approx. two sigma (95.45%), not three sigma
+REL_TOL_PERCENT = 0.001       # 0.001 percent
+MIN_PASS_FRACTION = 0.99  # three sigma
 PIXEL = (50, 75)             # requested spot check: ALT row, ACT column
 
 

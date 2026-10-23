@@ -13,8 +13,8 @@ REFERENCE = DATA_ROOT / "output"
 REPORT_OUTPUT = DATA_ROOT / "test_output_L1B_1"
 
 BANDS = ("VNIR-0", "VNIR-1", "VNIR-2", "VNIR-3")
-RELATIVE_TOLERANCE_PERCENT = 0.01
-REQUIRED_PERCENT = 95.45  # Two-sigma fraction for a normal distribution.
+RELATIVE_TOLERANCE_PERCENT = 0.001
+REQUIRED_PERCENT = 99  # Tree-sigma
 
 
 def read_toa(path):
